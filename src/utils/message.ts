@@ -1,3 +1,5 @@
 export const MSG1= "Product added to cart"
 export const MSG2= "Product removed to cart"
 export const MSG3= "Order Placed!"
+export const MSG4= "New Coupon generated!"
+export const MSG5= "Analytics Report!"

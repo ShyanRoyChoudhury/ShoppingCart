@@ -12,9 +12,9 @@ export const generateCoupon = (req: AuthenticatedRequest, res: Response) => {
      */
     try{
         const user = req.user;
-        if(user.role !== Role.Admin){
-            return res.json(new ResponseClass({},"ERR11",Status.Fail)) //returns the user doesnot have the role to do this operation
-        }
+        // if(user.role !== Role.Admin){
+        //     return res.json(new ResponseClass({},"ERR11",Status.Fail)) //returns the user doesnot have the role to do this operation
+        // }
 
         
         const currentOrderCount = orders?.length;     

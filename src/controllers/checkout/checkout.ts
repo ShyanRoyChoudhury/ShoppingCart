@@ -9,22 +9,28 @@ import { orders } from "../../dataStore/orders";
 import { generateCouponCode } from "../../utils/generateCouponCode";
 
 const getTotal = (userId: number) => {
-    const cart = carts.find(c => c.userId === userId && c.cartOrdered === false)
-    if(!cart) 
-        return null
-    else{
-        return {
-            total: cart.products.reduce((total, p) => total + (p.product.price * p.product.quantity), 0),
-            cart
-        };
+    console.log('carts', carts);
+    
+    const cart = carts.find(c => c.userId === userId && c.cartOrdered === false);
+    if (!cart) return null;
+
+    let total = 0;
+
+    for (const cartItem of cart.products) {
+        const product = products.find(p => p.id === cartItem.product.id); // product exists check
+        if (!product) continue;
+
+        total += product.price * cartItem.quantity; // Calculate total correctly
     }
-}
+
+    return { total, cart };
+};
 
 
 export const checkout = async (req: AuthenticatedRequest, res: Response) => {
     try{
         const schema = z.object({
-            couponCode: z.string().max(6),
+            couponCode: z.string().max(6).optional(),
         })
 
         const parsedInput = schema.safeParse(req.body);
@@ -43,6 +49,7 @@ export const checkout = async (req: AuthenticatedRequest, res: Response) => {
 
         if(!couponCode){    
             returnedData = getTotal(user.userid)
+            console.log('returnedData', returnedData?.total)
             if(returnedData === null) return res.json(new ResponseClass({}, "ERR8", Status.Fail));    // returns no cart found for that user
             const {total, cart} = returnedData;
             
@@ -51,7 +58,10 @@ export const checkout = async (req: AuthenticatedRequest, res: Response) => {
                 user,
                 cart
             })
-            if(currentOrderCount%generatorCount !== 0) generatedCouponCode = generateCouponCode();  // checks if it is nth order then generates a new coupon code for use
+
+            cart.cartOrdered = true;
+            if ((currentOrderCount + 1) % generatorCount === 0)
+                generatedCouponCode = generateCouponCode();  // checks if it is nth order then generates a new coupon code for use
 
             return res.json(new ResponseClass({
                 total,
@@ -68,9 +78,11 @@ export const checkout = async (req: AuthenticatedRequest, res: Response) => {
                 returnedData = getTotal(user.userid)
                 if(returnedData === null) return res.json(new ResponseClass({}, "ERR8", Status.Fail));    // returns no cart found for that user
                 const {total, cart} = returnedData;
+                console.log('total', total);
                 const discountedAmount = (10/100 * total);
+                console.log('discountedAmount', discountedAmount)
                 const discountedTotal = total - discountedAmount
-
+                console.log('discountedTotal', discountedTotal)
                 orders.push({           // update orders data store
                     total,
                     user,
@@ -78,8 +90,11 @@ export const checkout = async (req: AuthenticatedRequest, res: Response) => {
                     discountedAmount,
                     couponCode
                 })
+
+                cart.cartOrdered = true;
                 
-                if(currentOrderCount%generatorCount !== 0) generatedCouponCode = generateCouponCode();  // checks if it is nth order then generates a new coupon code for use
+                if ((currentOrderCount + 1) % generatorCount === 0)
+                    generatedCouponCode = generateCouponCode();  // checks if it is nth order then generates a new coupon code for use
                 return res.json(new ResponseClass({
                     total: discountedTotal,
                     couponCode: generatedCouponCode? generatedCouponCode: ''

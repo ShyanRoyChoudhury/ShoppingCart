@@ -5,14 +5,10 @@ import { ResponseClass, Status } from "../../utils/ResponseClass";
 import { orders } from "../../dataStore/orders";
 
 export const getAnalytics = (req: AuthenticatedRequest, res: Response) => {
-    /**
-     * function for generating code on every nth order
-     * api only accessible to users with admin role
-     */
-    try{
+    try {
         const user = req.user;
-        if(user.role !== Role.Admin){
-            return res.json(new ResponseClass({},"ERR11",Status.Fail)) //returns the user doesnot have the role to do this operation
+        if (user.role !== Role.Admin) {
+            return res.json(new ResponseClass({}, "ERR11", Status.Fail)); // User doesn't have the required role
         }
 
         // Initialize analytics variables
@@ -23,12 +19,13 @@ export const getAnalytics = (req: AuthenticatedRequest, res: Response) => {
 
         // Iterate over all orders
         orders.forEach(order => {
-            totalItemsPurchased += order.cart.products.reduce((sum, p) => sum + p.quantity, 0);     // Count total items purchased
-            totalPurchaseAmount += order.total;             // sum of total puchase amount
-
+            totalItemsPurchased += order.cart.products.reduce((sum, p) => sum + p.quantity, 0); // Count total items purchased
             
-            if (order.discountedAmount && order.couponCode) {                       // Sum total discount amount (if applied) & collect theor codes
-                totalDiscountAmount += order.discountedAmount;
+            const discount = order.discountedAmount || 0; // Ensure discount is handled correctly
+            totalDiscountAmount += discount;
+            totalPurchaseAmount += order.total - discount; // Subtract discount from total purchase amount
+
+            if (order.couponCode) { 
                 discountCodes.push(order.couponCode);
             }
         });
@@ -40,7 +37,7 @@ export const getAnalytics = (req: AuthenticatedRequest, res: Response) => {
             totalDiscountAmount
         }, "MSG5", Status.Success));
 
-    }catch(err){
-        return res.json(new ResponseClass({}, "ERR1", Status.Fail))
+    } catch (err) {
+        return res.json(new ResponseClass({}, "ERR1", Status.Fail));
     }
-}
+};

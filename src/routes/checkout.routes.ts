@@ -4,7 +4,7 @@ import { checkout } from "../controllers/checkout/checkout";
 const router = Router();
 
 // @ts-expect-error
-router.post('/checkout', verifyAuthMiddleware, checkout)
+router.post('', verifyAuthMiddleware, checkout)
 
 
 export default router;

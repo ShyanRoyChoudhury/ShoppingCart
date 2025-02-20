@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand",
-    "start": "npx nodemon src/server.ts"
+    "dev": "npx nodemon src/server.ts",
+    "build": "npx tsc -b",
+    "start": "node dist/src/server.js"
   },
   "author": "shyanroychoudhury",
   "license": "ISC",

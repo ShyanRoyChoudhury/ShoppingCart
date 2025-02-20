@@ -9,3 +9,4 @@ export const ERR8 = "No cart found for this user";
 export const ERR9 = "Invalid coupon code";
 export const ERR10 = "Coupon code expired";
 export const ERR11 = "You dont have the role to do this operation";
+export const ERR12 = "Coupon generation condition unsatisfied";

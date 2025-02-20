@@ -1,3 +1,11 @@
-export const ERR1= "Internal Server Error"
-export const ERR2 = "Invalid input data. Send Correct Data"
-export const ERR3 = "Unauthenticated User"
+export const ERR1= "Internal Server Error";
+export const ERR2 = "Invalid input data. Send Correct Data";
+export const ERR3 = "Unauthenticated User";
+export const ERR4 = "Product not found";
+export const ERR5 = "Product Out of Stock";
+export const ERR6 = "Cart Empty";
+export const ERR7 = "Product not found in Cart";
+export const ERR8 = "No cart found for this user";
+export const ERR9 = "Invalid coupon code";
+export const ERR10 = "Coupon code expired";
+export const ERR11 = "You dont have the role to do this operation";

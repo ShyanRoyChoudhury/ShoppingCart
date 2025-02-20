@@ -11,7 +11,4 @@ app.use('/api/cart', cartRouter)
 app.use('/api/checkout', checkoutRouter)
 app.use('/api/admin', adminRouter)
 
-
-app.listen(port, ()=> {
-    console.log(`Server running on port ${port}`)
-})
+export default app;

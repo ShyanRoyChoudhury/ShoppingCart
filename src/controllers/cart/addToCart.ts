@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { ResponseClass, Status } from "../utils/ResponseClass";
+import { ResponseClass, Status } from "../../utils/ResponseClass";
 import { z } from "zod";
-import { products } from "../dataStore/products";
-import { carts } from "../dataStore/carts";
-import { AuthenticatedRequest } from "../middleware/auth";
+import { products } from "../../dataStore/products";
+import { carts } from "../../dataStore/carts";
+import { AuthenticatedRequest } from "../../middleware/auth";
 
 export const addToCart = async (req: AuthenticatedRequest, res: Response) => {
     try {

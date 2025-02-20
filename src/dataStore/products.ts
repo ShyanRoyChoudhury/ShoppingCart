@@ -3,7 +3,14 @@
  * the product quantity in stock will increase/decrease based on the operation
  * */
 
-export const products = [
+export type ProductType = {
+    id: number;
+    name: string;
+    price: number;
+    quantity: number
+}
+
+export const products: ProductType[] = [
     { id: 1, name: "Wireless Mouse", price: 2000, quantity: 7 },
     { id: 2, name: "Mechanical Keyboard", price: 3000, quantity: 3 },
     { id: 3, name: "USB-C Hub", price: 1500, quantity: 5 },
